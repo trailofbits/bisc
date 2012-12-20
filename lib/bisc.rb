@@ -260,7 +260,8 @@ class Assembler
   # section followed by a 'ret' instruction.
   #
   def [](s)
-    if s.class == Symbol
+    case s
+    when Symbol
       addresses = @instructions[s]
 
       unless addresses
@@ -268,7 +269,7 @@ class Assembler
       end
 
       return addresses[0]
-    elsif s.class == String
+    when String
       addresses = @instructions[s.intern]
 
       unless addresses
