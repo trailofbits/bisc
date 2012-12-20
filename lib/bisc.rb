@@ -75,7 +75,7 @@ class Assembler
       case mod_rm
       when 0x00..0x3F
         # [r32], r32
-        operand_0 = '[' + r32_0.to_s + ']'
+        operand_0 = "[#{r32_0}]"
         operand_1 = r32_1.to_s
         
       when 0xC0..0xFF
@@ -87,9 +87,9 @@ class Assembler
       
       # Return symbol indicating instruction operation and form
       if (opcode & 2 == 2)
-        sym = (opcodes[opcode & ~2] + ' ' + operand_1 + ', ' + operand_0).intern
+        sym = "#{opcodes[opcode & ~2]} #{operand_1}, #{operand_0}".intern
       else
-        sym = (opcodes[opcode & ~2] + ' ' + operand_0 + ', ' + operand_1).intern
+        sym = "#{opcodes[opcode & ~2]} #{operand_0}, #{operand_1}".intern
       end
       
       return sym
@@ -100,7 +100,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x40]
       
-      return ('INC ' + dest_reg32.to_s).intern
+      return "INC #{dest_reg32}".intern
     },
     
     # dec r32
@@ -108,7 +108,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x48]
       
-      return ('DEC ' + dest_reg32.to_s).intern
+      return "DEC #{dest_reg32}".intern
     },
     
     # pop r32
@@ -116,7 +116,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x58]
       
-      return ('POP ' + dest_reg32.to_s).intern
+      return "POP #{dest_reg32}".intern
     },
     
     # push r32
@@ -124,14 +124,14 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x50]
       
-      return ('PUSH ' + dest_reg32.to_s).intern
+      return "PUSH #{dest_reg32}".intern
     },
     
     # add esp, N synthetic instruction
     '([\x59-\x5f]+)' => lambda { |matchdata|
       n_pops = matchdata[1].length
       
-      return ('ADD ESP, ' + (n_pops * 4).to_s).intern
+      return "ADD ESP, #{n_pops * 4}".intern
     },
     
     # xchg r32, r32
@@ -142,13 +142,12 @@ class Assembler
         dst_reg32 = REG32[(mod_rm >> 3) & 0x7]
         src_reg32 = REG32[mod_rm & 0x7]
         
-        return ('XCHG ' + dst_reg32.to_s + ', ' + 
-                src_reg32.to_s).intern
+        return "XCHG #{dst_reg32}, #{src_reg32}".intern
       else
         opcode = matchdata[1].unpack('C')[0]
         dst_reg32 = REG32[opcode - 0x90]
         
-        return ('XCHG EAX, ' + dst_reg32.to_s).intern
+        return "XCHG EAX, #{dst_reg32}".intern
       end
     },
     
@@ -214,7 +213,7 @@ class Assembler
         scanner = Rex::PeScan::Scanner::RegexScanner.new(pe)
         
         PATTERNS.keys.each { |pattern|
-          re = Regexp.new(pattern + '(\xC3)', nil, 'n')
+          re = Regexp.new("#{pattern}(\xC3)", nil, 'n')
           scanner.regex = re
           hits = scanner.scan_section(section)
           
@@ -368,7 +367,7 @@ class Assembler
   end
 
   def print_instructions()
-    @instructions.keys.map {|s| s.to_s}.sort.each do |i|
+    @instructions.keys.map(&:to_s).sort.each do |i|
       addresses = ''
 
       @instructions[i.to_sym].first(5).each do |a|
