@@ -29,6 +29,9 @@ module BISC
 # and unused data space that may be borrowed and used to construct
 # return-oriented programs.
 class Assembler
+  class Error < RuntimeError
+  end
+
   REG32 = [:EAX, :ECX, :EDX, :EBX, :ESP, :EBP, :ESI, :EDI]
 
   #
@@ -202,7 +205,7 @@ class Assembler
     # Check for DYNAMICBASE flag in DllCharacteristics
     #
     if (pe.hdr.opt.DllCharacteristics & 0x40) == 0x40
-      raise "#{path} is ASLR enabled..."
+      raise(Error,"#{path} is ASLR enabled...")
     end
 
     #
@@ -268,19 +271,19 @@ class Assembler
     if (s.class == Symbol)
       addresses = @instructions[s]
       if (!addresses)
-        raise "Instruction #{s} not found"
+        raise(Error,"Instruction #{s} not found")
       end
 
       return addresses[0]
     elsif (s.class == String)
       addresses = @instructions[s.intern]
       if (!addresses)
-        raise "Instruction #{s} not found"
+        raise(Error,"Instruction #{s} not found")
       end
 
       return addresses[0]
     else
-      raise "Name must be either a Symbol or a String"
+      raise(Error,"Name must be either a Symbol or a String")
     end
   end
   
