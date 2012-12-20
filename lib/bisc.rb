@@ -46,7 +46,7 @@ class Assembler
     0x09 => 'OR',
     0x19 => 'SBB',
     0x29 => 'SUB',
-    0x31 => 'XOR',
+    0x31 => 'XOR'
   }
 
   op1modrm_regex = '(' + opcodes.keys.map { |opcode|
@@ -202,7 +202,7 @@ class Assembler
         scanner = Rex::PeScan::Scanner::RegexScanner.new(pe)
         
         PATTERNS.keys.each { |pattern|
-          re = Regexp.new("#{pattern}(\xC3)", nil, 'n')
+          re = Regexp.new("#{pattern}(\\xC3)", nil, 'n')
           scanner.regex = re
           hits = scanner.scan_section(section)
           
