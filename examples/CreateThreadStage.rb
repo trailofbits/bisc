@@ -1,5 +1,4 @@
-#!/usr/bin/env ruby -I/opt/msf3/lib -I../lib/
-
+#!/usr/bin/env ruby -I../lib/
 #
 # This return-oriented payload stage copies two embedded
 # traditional machine code payloads into executable memory, creates a

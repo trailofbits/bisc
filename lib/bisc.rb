@@ -1,10 +1,10 @@
-#!/usr/bin/ruby -I/opt/msf3/lib/
-
 # BISC - Borrowed Instructions Synthetic Computation
 #
 # Author::    Dino Dai Zovi <ddz@theta44.org>
 # Copyright:: Copyright (c) 2010 Dino A. Dai Zovi
 # License::   GPL
+
+require 'bisc/version'
 
 require 'rex/peparsey'
 require 'rex/pescan'
@@ -359,14 +359,4 @@ class Assembler
     }
 end
 end
-end
-
-if $0 == __FILE__
-  #
-  # If bisc.rb is run as a script, print out usable instructions from
-  # the modules passed on the command-line
-  #
-  bisc = BISC::Assembler.new(ARGV)
-  bisc.print_instructions
-  
 end
