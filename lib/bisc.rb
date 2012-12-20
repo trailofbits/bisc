@@ -39,14 +39,14 @@ class Assembler
   # 1-byte opcode | mod_rm
   #
   opcodes = {
-    0x11 => "ADC",
-    0x01 => "ADD",
-    0x21 => "AND",
-    0x89 => "MOV",
-    0x09 => "OR",
-    0x19 => "SBB",
-    0x29 => "SUB",
-    0x31 => "XOR",
+    0x11 => 'ADC',
+    0x01 => 'ADD',
+    0x21 => 'AND',
+    0x89 => 'MOV',
+    0x09 => 'OR',
+    0x19 => 'SBB',
+    0x29 => 'SUB',
+    0x31 => 'XOR',
   }
 
   op1modrm_regex = '('
@@ -75,7 +75,7 @@ class Assembler
       case mod_rm
       when 0x00..0x3F
         # [r32], r32
-        operand_0 = "[" + r32_0.to_s + "]"
+        operand_0 = '[' + r32_0.to_s + ']'
         operand_1 = r32_1.to_s
         
       when 0xC0..0xFF
@@ -87,9 +87,9 @@ class Assembler
       
       # Return symbol indicating instruction operation and form
       if (opcode & 2 == 2)
-        sym = (opcodes[opcode & ~2] + " " + operand_1 + ", " + operand_0).intern
+        sym = (opcodes[opcode & ~2] + ' ' + operand_1 + ', ' + operand_0).intern
       else
-        sym = (opcodes[opcode & ~2] + " " + operand_0 + ", " + operand_1).intern
+        sym = (opcodes[opcode & ~2] + ' ' + operand_0 + ', ' + operand_1).intern
       end
       
       return sym
@@ -100,7 +100,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x40]
       
-      return ("INC " + dest_reg32.to_s).intern
+      return ('INC ' + dest_reg32.to_s).intern
     },
     
     # dec r32
@@ -108,7 +108,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x48]
       
-      return ("DEC " + dest_reg32.to_s).intern
+      return ('DEC ' + dest_reg32.to_s).intern
     },
     
     # pop r32
@@ -116,7 +116,7 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x58]
       
-      return ("POP " + dest_reg32.to_s).intern
+      return ('POP ' + dest_reg32.to_s).intern
     },
     
     # push r32
@@ -124,14 +124,14 @@ class Assembler
       opcode = matchdata[1].unpack('C')[0]
       dest_reg32 = REG32[opcode - 0x50]
       
-      return ("PUSH " + dest_reg32.to_s).intern
+      return ('PUSH ' + dest_reg32.to_s).intern
     },
     
     # add esp, N synthetic instruction
     '([\x59-\x5f]+)' => lambda { |matchdata|
       n_pops = matchdata[1].length
       
-      return ("ADD ESP, " + (n_pops * 4).to_s).intern
+      return ('ADD ESP, ' + (n_pops * 4).to_s).intern
     },
     
     # xchg r32, r32
@@ -142,27 +142,27 @@ class Assembler
         dst_reg32 = REG32[(mod_rm >> 3) & 0x7]
         src_reg32 = REG32[mod_rm & 0x7]
         
-        return ("XCHG " + dst_reg32.to_s + ", " + 
+        return ('XCHG ' + dst_reg32.to_s + ', ' + 
                 src_reg32.to_s).intern
       else
         opcode = matchdata[1].unpack('C')[0]
         dst_reg32 = REG32[opcode - 0x90]
         
-        return ("XCHG EAX, " + dst_reg32.to_s).intern
+        return ('XCHG EAX, ' + dst_reg32.to_s).intern
       end
     },
     
     # int 3
     '(\xCC)' => lambda { |matchdata|
-      return ("INT3").intern
+      return ('INT3').intern
     },
     
     # nop
     '(\x90)' => lambda { |matchdata|
-      return ("NOP").intern
+      return ('NOP').intern
     }
   }
- 
+
   #
   # Create a new BISC object to assist in creating return-oriented programs
   # 
@@ -170,7 +170,7 @@ class Assembler
     #
     # Track the modules that we've been given
     #
-    @modules = Hash.new()
+    @modules = {}
 
     #
     # Keep a hash table of dissassembled instruction mnemonics 
@@ -178,7 +178,7 @@ class Assembler
     # followed by a return can be
     # found.
     #
-    @instructions = Hash.new()
+    @instructions = {}
 
     #
     # Record the amount of slack space between the last of .data
@@ -186,11 +186,9 @@ class Assembler
     # multiple of the page size.  We can safely use this slack space
     # for temporary scratch storage.
     #
-    @slack_space = Array.new()
+    @slack_space = []
 
-    libraries.each { |lib|
-        add_module(lib)
-    }
+    libraries.each { |lib| add_module(lib) }
   end
 
   #
@@ -212,7 +210,7 @@ class Assembler
     # Apply regular expressions to .text sections in PE modules
     #
     pe.all_sections.each { |section|
-      if (section.name == ".text")
+      if (section.name == '.text')
         scanner = Rex::PeScan::Scanner::RegexScanner.new(pe)
         
         PATTERNS.keys.each { |pattern|
@@ -243,7 +241,7 @@ class Assembler
     # Add slack space from .data segment to our data segments list
     #
     pe.sections.each { |section|
-      if (section.name == ".data")
+      if (section.name == '.data')
         slack_begin =
           pe.rva_to_vma(section.base_rva) +
           section._section_header.v['Misc']
@@ -260,7 +258,7 @@ class Assembler
   # modules followed by 'ret' instructions.
   #
   def instructions
-    return @instructions.keys
+    @instructions.keys
   end
 
   #
@@ -270,14 +268,16 @@ class Assembler
   def [](s)
     if (s.class == Symbol)
       addresses = @instructions[s]
-      if (!addresses)
+
+      unless addresses
         raise(Error,"Instruction #{s} not found")
       end
 
       return addresses[0]
     elsif (s.class == String)
       addresses = @instructions[s.intern]
-      if (!addresses)
+
+      unless addresses
         raise(Error,"Instruction #{s} not found")
       end
 
@@ -360,22 +360,23 @@ class Assembler
   # flattened before being assembled.
   #
   def assemble(program)
-    p = program.flatten.map { |i|
-      (i.class == String) ? self[i] : i
-    }
+    p = program.flatten.map do |i|
+      i.kind_of?(String) ? self[i] : i
+    end
 
     return p.pack('V*')
   end
 
   def print_instructions()
-    @instructions.keys.map {|s| s.to_s}.sort.each { |i|
-      addresses = ""
-      @instructions[i.to_sym].first(5).each { |a|
-        addresses += sprintf("0x%x ", a)
-      }
+    @instructions.keys.map {|s| s.to_s}.sort.each do |i|
+      addresses = ''
+
+      @instructions[i.to_sym].first(5).each do |a|
+        addresses << sprintf('0x%x ', a)
+      end
       
       puts "#{i} #{addresses}"
-    }
+    end
 end
 end
 end
