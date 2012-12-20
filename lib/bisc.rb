@@ -54,8 +54,8 @@ class Assembler
     if (op1modrm_regex != '(')
       op1modrm_regex << '|'
     end
-    op1modrm_regex << sprintf('\x%.2x', opcode)
-    op1modrm_regex << sprintf('|\x%.2x', opcode + 2)
+    op1modrm_regex << ('\x%.2x' % opcode)
+    op1modrm_regex << ('|\x%.2x' % (opcode + 2))
   }
   op1modrm_regex << ')'
   op1modrm_regex << '[\x00-\x3f\xc0-\xff]'
@@ -371,7 +371,7 @@ class Assembler
       addresses = ''
 
       @instructions[i.to_sym].first(5).each do |a|
-        addresses << sprintf('0x%x ', a)
+        addresses << ('0x%x ' % a)
       end
       
       puts "#{i} #{addresses}"
