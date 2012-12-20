@@ -199,8 +199,11 @@ class Assembler
     @modules[pename] = pe
 
     #
-    # XXX: Check for DYNAMICBASE flag in DllCharacteristics
+    # Check for DYNAMICBASE flag in DllCharacteristics
     #
+    if (pe.hdr.opt.DllCharacteristics & 0x40) == 0x40
+      raise "#{path} is ASLR enabled..."
+    end
 
     #
     # Apply regular expressions to .text sections in PE modules
