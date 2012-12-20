@@ -49,15 +49,9 @@ class Assembler
     0x31 => 'XOR',
   }
 
-  op1modrm_regex = '('
-  opcodes.keys.each do |opcode|
-    op1modrm_regex << '|' if op1modrm_regex != '('
-    op1modrm_regex << ('\x%.2x' % opcode)
-    op1modrm_regex << ('|\x%.2x' % (opcode + 2))
-  end
-
-  op1modrm_regex << ')'
-  op1modrm_regex << '[\x00-\x3f\xc0-\xff]'
+  op1modrm_regex = '(' + opcodes.keys.map { |opcode|
+    '\x%.2x|\x%.2x' % [opcode, opcode + 2]
+  }.join('|') + ')[\x00-\x3f\xc0-\xff]'
   
   #
   # Hash table of regex => decoder functions
