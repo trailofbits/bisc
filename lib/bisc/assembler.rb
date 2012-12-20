@@ -79,11 +79,11 @@ module BISC
         end
   
         # Return symbol indicating instruction operation and form
-        if (opcode & 2) == 2
-          sym = "#{opcodes[opcode & ~2]} #{operand_1}, #{operand_0}".intern
-        else
-          sym = "#{opcodes[opcode & ~2]} #{operand_0}, #{operand_1}".intern
-        end
+        sym = if (opcode & 2) == 2
+                "#{opcodes[opcode & ~2]} #{operand_1}, #{operand_0}".intern
+              else
+                "#{opcodes[opcode & ~2]} #{operand_0}, #{operand_1}".intern
+              end
   
         return sym
       },
