@@ -355,7 +355,7 @@ module BISC
       return p.pack('V*')
     end
 
-    def print_instructions()
+    def print_instructions
       @instructions.keys.map(&:to_s).sort.each do |i|
         addresses = ''
 
