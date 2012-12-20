@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -I../lib/
+#!/usr/bin/env ruby
 #
 # This return-oriented payload stage copies two embedded
 # traditional machine code payloads into executable memory, creates a
@@ -8,6 +8,9 @@
 # It was written using borrowable instructions from SwDir.dll,
 # dirapi.dll, and iml32.dll from Shockwave 11.5.6r606.
 #
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bisc'
 
