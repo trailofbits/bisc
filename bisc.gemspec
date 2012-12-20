@@ -7,7 +7,7 @@ require 'bisc/version'
 Gem::Specification.new do |gem|
   gem.name          = "bisc"
   gem.version       = Bisc::VERSION
-  gem.license       = 'GPL'
+  gem.license       = 'GPLv3'
   gem.authors       = ["Dino A. Dai Zovi"]
   gem.email         = ["ddz@theta44.org"]
   gem.description   = %q{Borrowed Instructions Synthetic Computation}
