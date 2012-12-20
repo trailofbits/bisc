@@ -50,13 +50,12 @@ class Assembler
   }
 
   op1modrm_regex = '('
-  opcodes.keys.each { |opcode|
-    if (op1modrm_regex != '(')
-      op1modrm_regex << '|'
-    end
+  opcodes.keys.each do |opcode|
+    op1modrm_regex << '|' if op1modrm_regex != '('
     op1modrm_regex << ('\x%.2x' % opcode)
     op1modrm_regex << ('|\x%.2x' % (opcode + 2))
-  }
+  end
+
   op1modrm_regex << ')'
   op1modrm_regex << '[\x00-\x3f\xc0-\xff]'
   
@@ -86,7 +85,7 @@ class Assembler
       end
       
       # Return symbol indicating instruction operation and form
-      if (opcode & 2 == 2)
+      if (opcode & 2) == 2
         sym = "#{opcodes[opcode & ~2]} #{operand_1}, #{operand_0}".intern
       else
         sym = "#{opcodes[opcode & ~2]} #{operand_0}, #{operand_1}".intern
@@ -136,7 +135,7 @@ class Assembler
     
     # xchg r32, r32
     '((\x87[\xc0-\xff])|[\x90-\x97])' => lambda { |matchdata|
-      if (matchdata[2])
+      if matchdata[2]
         mod_rm = matchdata[2].unpack('C')[0]
         
         dst_reg32 = REG32[(mod_rm >> 3) & 0x7]
@@ -152,14 +151,10 @@ class Assembler
     },
     
     # int 3
-    '(\xCC)' => lambda { |matchdata|
-      return ('INT3').intern
-    },
+    '(\xCC)' => lambda { |matchdata| return 'INT3'.intern },
     
     # nop
-    '(\x90)' => lambda { |matchdata|
-      return ('NOP').intern
-    }
+    '(\x90)' => lambda { |matchdata| return 'NOP'.intern }
   }
 
   #
@@ -209,7 +204,7 @@ class Assembler
     # Apply regular expressions to .text sections in PE modules
     #
     pe.all_sections.each { |section|
-      if (section.name == '.text')
+      if section.name == '.text'
         scanner = Rex::PeScan::Scanner::RegexScanner.new(pe)
         
         PATTERNS.keys.each { |pattern|
@@ -222,10 +217,10 @@ class Assembler
             bytes = hit[1][0]
             matchdata = re.match([bytes].pack('H*'))
             
-            if (matchdata)
+            if matchdata
               sym = PATTERNS[pattern].call(matchdata)
               
-              if (@instructions[sym] == nil)
+              if @instructions[sym] == nil
                 @instructions[sym] = Array.new()
               end
               
@@ -240,7 +235,7 @@ class Assembler
     # Add slack space from .data segment to our data segments list
     #
     pe.sections.each { |section|
-      if (section.name == '.data')
+      if section.name == '.data'
         slack_begin =
           pe.rva_to_vma(section.base_rva) +
           section._section_header.v['Misc']
@@ -265,7 +260,7 @@ class Assembler
   # section followed by a 'ret' instruction.
   #
   def [](s)
-    if (s.class == Symbol)
+    if s.class == Symbol
       addresses = @instructions[s]
 
       unless addresses
@@ -273,7 +268,7 @@ class Assembler
       end
 
       return addresses[0]
-    elsif (s.class == String)
+    elsif s.class == String
       addresses = @instructions[s.intern]
 
       unless addresses
@@ -293,7 +288,7 @@ class Assembler
     @slack_space.each { |s|
       slack_begin, slack_current, slack_end = s
 
-      if (slack_current + n_bytes < slack_end)
+      if (slack_current + n_bytes) < slack_end
         s[1] = slack_current + n_bytes
         return slack_current
       end
@@ -308,9 +303,9 @@ class Assembler
   def get_iat_pointer(dll_name, function_name)
     @modules.values.each { |pe|
       pe.imports.each { |import|
-        if (import.name.casecmp(dll_name) == 0)
+        if import.name.casecmp(dll_name) == 0
           import.entries.each_with_index { |entry, i|
-            if (entry.name.casecmp(function_name) == 0)
+            if entry.name.casecmp(function_name) == 0
               rva = _get_iat_vma(pe, dll_name)
               
               return rva + (i * 4)
@@ -340,7 +335,7 @@ class Assembler
       dllname =
         pe._isource.read_asciiz(pe.rva_to_file_offset(descriptor.v['Name']))
       
-      if (dllname.casecmp(fordll) == 0)
+      if dllname.casecmp(fordll) == 0
         iat_rva = descriptor.v['FirstThunk']
         iat_vma = pe.rva_to_vma(iat_rva)
         return iat_vma
