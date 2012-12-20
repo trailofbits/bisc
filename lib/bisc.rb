@@ -221,7 +221,7 @@ class Assembler
               sym = PATTERNS[pattern].call(matchdata)
               
               if @instructions[sym] == nil
-                @instructions[sym] = Array.new()
+                @instructions[sym] = []
               end
               
               @instructions[sym].push(address)
