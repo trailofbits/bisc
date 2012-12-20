@@ -1,5 +1,4 @@
-BISC: Borrowed Instructions Synthetic Computation
-====
+# BISC: Borrowed Instructions Synthetic Computation
 
 For an example of how to use BISC, see src/CreateThreadStage.rb. This
 BISC program creates a new thread to run an embedded machine code
@@ -10,8 +9,8 @@ but it still serves as a code example of how BISC is to be used.
 
 BISC programs are built from a cygwin shell:
 
-$ ./CreateThreadStage.rb ./Shockwave-11.5.6r606/*.dll > CreateThreadStage.rop
+    ./examples/CreateThreadStage.rb ./Shockwave-11.5.6r606/*.dll > CreateThreadStage.rop
 
 Testing must be done from a Windows CMD.exe shell:
 
-> ./test-rop.exe CreateThreadStage.rop ./Shockwave-11.5.6r606/*.dll
+    ./data/test-rop.exe CreateThreadStage.rop ./Shockwave-11.5.6r606/*.dll
