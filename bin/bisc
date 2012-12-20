@@ -5,5 +5,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bisc'
 
-bisc = BISC::Assembler.new(ARGV)
-bisc.print_instructions
+begin
+  bisc = BISC::Assembler.new(ARGV)
+  bisc.print_instructions
+rescue BISC::Error => error
+  $stderr.puts error.message
+  exit -1
+end
