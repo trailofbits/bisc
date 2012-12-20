@@ -197,7 +197,7 @@ class Assembler
     #
     # Apply regular expressions to .text sections in PE modules
     #
-    pe.all_sections.each { |section|
+    pe.all_sections.each do |section|
       if section.name == '.text'
         scanner = Rex::PeScan::Scanner::RegexScanner.new(pe)
         
@@ -223,12 +223,12 @@ class Assembler
           }
         }
       end
-    }
+    end
 
     #
     # Add slack space from .data segment to our data segments list
     #
-    pe.sections.each { |section|
+    pe.sections.each do |section|
       if section.name == '.data'
         slack_begin =
           pe.rva_to_vma(section.base_rva) +
@@ -238,7 +238,7 @@ class Assembler
         # Record slack space as [begin, allocated_position, end]
         @slack_space.push([slack_begin, slack_begin, slack_end])
       end
-    }
+    end
   end
 
   #
@@ -280,14 +280,14 @@ class Assembler
   # Allocate memory from scratch space
   #
   def allocate(n_bytes)
-    @slack_space.each { |s|
+    @slack_space.each do |s|
       slack_begin, slack_current, slack_end = s
 
       if (slack_current + n_bytes) < slack_end
         s[1] = slack_current + n_bytes
         return slack_current
       end
-    }
+    end
 
     return nil
   end
@@ -296,8 +296,8 @@ class Assembler
   # Lookup an import's function pointer in an IAT and return its address
   #
   def get_iat_pointer(dll_name, function_name)
-    @modules.values.each { |pe|
-      pe.imports.each { |import|
+    @modules.values.each do |pe|
+      pe.imports.each do |import|
         if import.name.casecmp(dll_name) == 0
           import.entries.each_with_index { |entry, i|
             if entry.name.casecmp(function_name) == 0
@@ -307,8 +307,8 @@ class Assembler
             end
           }
         end
-      }
-    }
+      end
+    end
     
     return nil
   end
