@@ -7,7 +7,7 @@ require 'bisc'
 require 'optparse'
 
 optparse = OptionParser.new do |opts|
-  opts.banner = 'usage: bisc FILE ...'
+  opts.banner = 'usage: bisc FILE ... > OUTPUT.rop'
 
   opts.on('-V','--version','Print the version') do
     puts "bisc #{BISC::VERSION}"
