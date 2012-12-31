@@ -17,7 +17,7 @@
 # along with Bisc.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-module Bisc
+module BISC
   # bisc version
   VERSION = '0.1.0'
 end
