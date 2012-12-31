@@ -4,6 +4,18 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bisc'
+require 'optparse'
+
+optparse = OptionParser.new do |opts|
+  opts.banner = 'usage: bisc FILE ...'
+
+  opts.on('-V','--version','Print the version') do
+    puts "bisc #{BISC::VERSION}"
+    exit
+  end
+end
+
+optparse.parse!
 
 begin
   bisc = BISC::Assembler.new(ARGV)
