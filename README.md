@@ -1,5 +1,7 @@
 # BISC: Borrowed Instructions Synthetic Computation
 
+[![Code Climate](https://codeclimate.com/github/trailofbits/bisc.png)](https://codeclimate.com/github/trailofbits/bisc)
+
 BISC is a ruby library for demonstrating how to build [borrowed-instruction](http://users.suse.com/~krahmer/no-nx.pdf) programs. BISC aims to be simple, analogous to a traditional assembler, minimize behind-the-scenes magic, and let users write simple macros. BISC was developed for [Practical Return-oriented Programming](http://www.trailofbits.com/research/#practical-rop) at Blackhat USA 2010 and has been used for [Assured Exploitation](http://www.trailofbits.com/training/#assured-exploitation) trainings since then. 
 
 For an example of how to use BISC, see src/CreateThreadStage.rb. This
