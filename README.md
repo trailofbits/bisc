@@ -13,9 +13,6 @@ For an example of how to use BISC, see [examples/CreateThreadStage.rb].
 This BISC program creates a new thread to run an embedded machine code
 payload and then runs a "parent" payload in the current thread.
 
-I haven't tested it in a while and it's probably broken in some way,
-but it still serves as a code example of how BISC is to be used.
-
 BISC programs are built from a cygwin shell:
 
     ./examples/CreateThreadStage.rb ./Shockwave-11.5.6r606/*.dll > CreateThreadStage.rop
