@@ -20,6 +20,8 @@
 require 'rex/peparsey'
 require 'rex/pescan'
 require 'rex/arch/x86'
+require 'rex/elfparsey'
+require 'rex/elfscan'
 
 module BISC
   #
@@ -179,10 +181,14 @@ module BISC
       libraries.each { |lib| add_module(lib) }
     end
 
+    def add_module(path)
+        add_elf_module(path)
+    end
+
     #
     # Add a PE module (DLL or EXE) to be scanned for usable instructions
     #
-    def add_module(path)
+    def add_pe_module(path)
       pe = Rex::PeParsey::Pe.new_from_file(path, true)
       pename = File.basename(path)
       @modules[pename] = pe
@@ -238,6 +244,59 @@ module BISC
           # Record slack space as [begin, allocated_position, end]
           @slack_space.push([slack_begin, slack_begin, slack_end])
         end
+      end
+    end
+
+
+    PF_X = (1 << 0)
+    PF_W = (1 << 1)
+    PT_LOAD = Rex::ElfParsey::ElfBase::PT_LOAD
+
+    #
+    # Add and ELF module for to be scanned for usable instructions
+    #
+    def add_elf_module(path)
+      elf = Rex::ElfParsey::Elf.new_from_file(path, true)
+      elfname = File.basename(path)
+      @modules[elfname] = elf
+
+      if elf.elf_header.e_type == Rex::ElfParsey::ElfBase::ET_DYN
+        raise(Error,"#{path} is ASLR enabled...")
+      end
+
+      scanner = Rex::ElfScan::Scanner::RegexScanner.new(elf)
+      elf.program_header.each do |header|
+        next unless header.p_type == PT_LOAD && header.p_flags & PF_X == PF_X
+
+        PATTERNS.keys.each do |pattern|
+          re = Regexp.new("#{pattern}(\\xC3)", nil, 'n')
+          scanner.regex = re
+          hits = scanner.scan_segment(header)
+
+          hits.each do |hit|
+            address = elf.rva_to_offset(hit[0])
+            bytes = hit[1][0]
+            matchdata = re.match([bytes].pack('H*'))
+
+            if matchdata
+              sym = PATTERNS[pattern].call(matchdata)
+
+              if @instructions[sym] == nil
+                @instructions[sym] = []
+              end
+
+              @instructions[sym].push(address)
+            end
+          end
+        end
+      end
+
+      # Add slack space
+      elf.program_header.each do |header|
+        next unless header.p_type == PT_LOAD && header.p_flags & PF_W == PF_W
+        slack_begin = header.p_vaddr + header.p_memsz;
+        slack_end = (slack_begin + header.p_align) & ~(header.p_align - 1)
+        @slack_space.push([slack_begin, slack_begin, slack_end])
       end
     end
 
