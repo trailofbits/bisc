@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'bisc'
+require 'optparse'
+
+optparse = OptionParser.new do |opts|
+  opts.banner = 'usage: bisc FILE ... > OUTPUT.rop'
+
+  opts.on('-V','--version','Print the version') do
+    puts "bisc #{BISC::VERSION}"
+    exit
+  end
+end
+
+optparse.parse!
+
+begin
+  bisc = BISC::ELFAssembler.new(ARGV)
+  bisc.print_instructions
+rescue BISC::Assembler::Error => error
+  $stderr.puts error.message
+  exit -1
+end
+

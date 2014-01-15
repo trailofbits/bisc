@@ -18,4 +18,5 @@
 #
 
 require 'bisc/assembler'
+require 'bisc/elf_assembler'
 require 'bisc/version'
