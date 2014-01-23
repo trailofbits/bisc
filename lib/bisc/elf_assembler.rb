@@ -32,7 +32,7 @@ module BISC
           hits = scanner.scan_segment(header)
 
           hits.each do |hit|
-            address = elf.elf.rva_to_offset(hit[0])
+            address = hit[0]
             bytes = hit[1][0]
             matchdata = re.match([bytes].pack('H*'))
 

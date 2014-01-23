@@ -7,14 +7,19 @@ require 'bisc'
 
 bisc = BISC::ELFAssembler.new(ARGV)
 
-pVar = bisc.allocate(4)
-free = bisc.get_iat_pointer('free')
+lpVar = bisc.allocate(4)
+lppExit = bisc.get_iat_pointer('exit')
 
+NOPS = [ "NOP" ] * 500
 Main = [
-  pVar,
-  free,
-  "NOP",
+  "POP ECX", lpVar,
+  "POP EAX", 0x01,
+  "MOV [ECX], EAX",
+  "POP ECX", lppExit,
+  "MOV EAX, [ECX]",
+  "PUSH EAX", "NOP", 0x02,
+  "NOP", "NOP"
 ]
 
-print bisc.assemble(Main)
+print bisc.assemble(NOPS + Main)
 
