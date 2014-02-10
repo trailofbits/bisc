@@ -2,12 +2,28 @@
 
 [![Code Climate](https://codeclimate.com/github/trailofbits/bisc.png)](https://codeclimate.com/github/trailofbits/bisc)
 
+##About
+
 BISC is a ruby library for demonstrating how to build [borrowed-instruction]
 programs. BISC aims to be simple, analogous to a traditional assembler,
 minimize behind-the-scenes magic, and let users write simple macros.
 BISC was developed for [Practical Return-oriented Programming] at
 Blackhat USA 2010 and has been used for [Assured Exploitation] trainings since
 then. 
+
+##Installation
+
+Before installing, note that BISC expects to be handed a binary file that does 
+not have ASLR enabled.
+
+BISC runs in Windows or Linux.  For Windows support you must have a Cygwin shell 
+installed, as well as the following packages
+
+* Ruby X.X.X
+* 
+* 
+
+##Examples
 
 For an example of how to use BISC, see [examples/CreateThreadStage.rb].
 This BISC program creates a new thread to run an embedded machine code
