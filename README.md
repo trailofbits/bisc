@@ -14,25 +14,20 @@ then.
 ##Installation
 
 ###Windows
-
 The most tested and support installation of BISC is on Windows utilizing the Cygwin shell. Note that BISC
 utilizes the librex gem, which Windows Defender will flag as malware and remove.  As such, it is encouraged that you
 run BISC inside of a VM in which Windows Defender has been disabled.
 
 ####BISC on Windows with Cygwin
-
-NOTE: If you have Ruby and RubyGems installed on your local windows computer this method will not work. See the tutorial
+*NOTE:* If you have Ruby and RubyGems installed on your local windows computer this method will not work. See the tutorial
 'BISC on Windows with Powershell'
 
-1.) Install Ruby and git from cygwin installer.
-    For Ruby, simply select 'Ruby' from the main package
-    selection window.  This will automatically install Ruby 1.9.3
-    as well as all of the dependencies needed.  For git, expand out
+#####Install Ruby and git from cygwin installer.
+For Ruby, simply select 'Ruby' from the main package selection window.  This will automatically install Ruby 1.9.3 as 
+well as all of the dependencies needed.  For git, expand out the Devel tab and look for the package simply named 'git',
+and mark this package for installation.
 
-the Devel tab and look for the package simply named 'git', and
-mark this package for installation.
-
-2.) Install Ruby's 'bundle' gem
+#####Install Ruby's 'bundle' gem
 ```bash
 User@vm ~/bisc
 $ gem install bundle
@@ -42,7 +37,7 @@ Installing ri documentation for bundle-0.0.1...
 Installing RDoc documentation for bundle-0.0.1...
 ```
 
-3.) Install BISC
+#####Install BISC
 ```bash
 User@vm ~/bisc
 $ bundle install
@@ -59,10 +54,10 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 
 ####BISC on Windows with Powershell
 
-1.) Install Ruby 1.9.3+
+#####Install Ruby 1.9.3+
 Ensure that the ruby bin directory is in your path
 
-2.) Install bundle
+#####Install bundle
 ```cmd
 PS C:\Users\User> gem install bundle
 Successfully installed bundle-0.0.1
@@ -73,7 +68,7 @@ Installing RDoc documentation for bundle-0.0.1...
 file 'lib' not found
 ```
 
-3.) Install bisc
+#####Install bisc
 ```cmd
 PS C:\Users\User\Desktop\bisc> bundle install
 fatal: Not a git repository (or any of the parent directories): .git
