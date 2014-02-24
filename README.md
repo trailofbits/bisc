@@ -11,6 +11,13 @@ BISC was developed for [Practical Return-oriented Programming] at
 Blackhat USA 2010 and has been used for [Assured Exploitation] trainings since
 then. 
 
+##Technical Overview
+
+BISC utilizes the Ruby librex peparsey and pescan libraries to scan PE
+(or elfparsey and elfscan for ELF) modules for instruction sequences 
+and unused data space that may be borrowed and used to construct return-oriented 
+programs.
+
 ##Installation
 
 ###Windows
