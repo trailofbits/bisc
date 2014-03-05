@@ -16,7 +16,13 @@ then.
 BISC utilizes the Ruby librex peparsey and pescan libraries to scan PE
 (or elfparsey and elfscan for ELF) modules for instruction sequences 
 and unused data space that may be borrowed and used to construct return-oriented 
-programs.
+programs.  While traditional ROP-Programming relies on composing reused instructions
+into gadgets, BISC makes use of borrowed instruction mnemonics and as 
+such is more opportunistic based off of the instructions available in provided
+executables.  BISC does this by scanning through the provided executable files
+searching for a single instruction followed by a 'ret' which is added to BISC's
+available vocabulary.  This vocabulary can then be pulled from to write and ultimately
+assemble a borrowed-instruction program to be used for exploitation.
 
 ##Installation
 
