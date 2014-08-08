@@ -1,6 +1,6 @@
 ## BISC: Borrowed Instructions Synthetic Computation
 
-[![Code Climate](https://codeclimate.com/github/trailofbits/bisc.png)](https://codeclimate.com/github/trailofbits/bisc)
+[![Code Climate](https://codeclimate.com/github/trailofbits/bisc.png)](https://codeclimate.com/github/trailofbits/bisc) [![Build Status](https://travis-ci.org/trailofbits/bisc.svg)](https://travis-ci.org/trailofbits/bisc)
 
 ##About
 
