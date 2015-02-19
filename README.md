@@ -91,3 +91,10 @@ Testing must be done from a Windows CMD.exe shell:
 [Practical Return-oriented Programming]: http://blog.trailofbits.com/2010/04/26/practical-return-oriented-programming/
 [Assured Exploitation]: http://www.trailofbits.com/training/#assured-exploitation
 [examples/CreateThreadStage.rb]: https://github.com/trailofbits/bisc/blob/master/examples/CreateThreadStage.rb
+
+# Contributors
+* [@ddz](https://github.com/ddz) (original author)
+* [@dgalling](https://github.com/dgalling)
+* [@postmodern](https://github.com/postmodern)
+* [@PoppySeedPlehzr](https://github.com/PoppySeedPlehzr)
+* [@NitinJami](https://github.com/NitinJami)
